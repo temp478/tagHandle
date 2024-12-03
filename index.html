@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    function handleTags() {
+      // Get all tag links
+      const tagLinks = document.querySelectorAll('.tag-links a[tag-text]');
+      
+      // Get the current URL to check if a tag is active
+      const currentUrl = window.location.href;
+      
+      // Handle each tag
+      tagLinks.forEach(tag => {
+        // Check if this tag is currently active
+        if (currentUrl.includes(tag.getAttribute('tag-text'))) {
+          tag.style.color = '#87c261'; // Your active color
+        }
+        
+        tag.addEventListener('click', function(e) {
+          // Remove active color from all tags
+          tagLinks.forEach(t => t.style.color = '');
+          
+          // Add active color to clicked tag
+          this.style.color = '#87c261';
+          
+          // Optional: Scroll to thumbnail-index
+          const thumbnailIndex = document.querySelector('thumbnail-index');
+          if (thumbnailIndex) {
+            setTimeout(() => {
+              thumbnailIndex.scrollIntoView({ behavior: 'smooth' });
+            }, 300); // Small delay to let Cargo's filtering complete
+          }
+        });
+      });
+    }
+
+    // Run when DOM is loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', handleTags);
+    } else {
+      handleTags();
+    }
+  </script>
+</head>
+<body>
+  <!-- Empty body as we're just using the script -->
+</body>
+</html>

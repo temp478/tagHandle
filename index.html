@@ -3,27 +3,47 @@
 <head>
   <script>
     function handleTags() {
-      // Updated selector to match your HTML structure
-      const tagLinks = document.querySelectorAll('a[rel="history"][tag-text]');
+      console.log('Script running...'); // Debug log
       
-      // Get the current URL to check if a tag is active
+      // Try to find the tags
+      const tagLinks = document.querySelectorAll('.tag-links a[rel="history"]');
+      console.log('Found tags:', tagLinks.length); // Debug log
+      
+      if(tagLinks.length === 0) {
+        console.log('No tags found, will retry...'); // Debug log
+        return; // Exit and let the retry handle it
+      }
+      
+      // Get the current URL
       const currentUrl = window.location.href;
+      console.log('Current URL:', currentUrl); // Debug log
       
       // Handle each tag
       tagLinks.forEach(tag => {
-        // Check if this tag is currently active
+        // Make tag color more visible
+        const activeColor = '#00FF00'; // Bright green for testing
+        
+        // Check if active
         if (currentUrl.includes(tag.getAttribute('tag-text'))) {
-          tag.style.color = '#87c261'; // Your active color
+          tag.style.color = activeColor;
+          console.log('Active tag found:', tag.textContent); // Debug log
         }
         
+        // Add click handler
         tag.addEventListener('click', function(e) {
-          // Remove active color from all tags
-          tagLinks.forEach(t => t.style.color = '');
+          console.log('Tag clicked:', this.textContent); // Debug log
           
-          // Add active color to clicked tag
-          this.style.color = '#87c261';
+          // Remove all active colors
+          tagLinks.forEach(t => {
+            t.style.color = '';
+            t.style.backgroundColor = '';
+          });
           
-          // Optional: Scroll to thumbnail-index
+          // Make clicked tag very visible
+          this.style.color = activeColor;
+          this.style.backgroundColor = '#333'; // Dark background for contrast
+          
+          // Scroll to results
           const thumbnailIndex = document.querySelector('thumbnail-index');
           if (thumbnailIndex) {
             setTimeout(() => {
@@ -34,18 +54,24 @@
       });
     }
 
-    // Try to run the function multiple times to ensure it catches the elements
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', handleTags);
-    } else {
-      handleTags();
+    // Try to run immediately
+    handleTags();
+
+    // Try again when DOM is loaded
+    document.addEventListener('DOMContentLoaded', handleTags);
+
+    // Keep trying every second for 5 seconds
+    for(let i = 1; i <= 5; i++) {
+      setTimeout(handleTags, i * 1000);
     }
-    
-    // Additional safety net to ensure the script runs after Cargo loads
-    setTimeout(handleTags, 1000);
+
+    // Add message to show script is loaded
+    console.log('Tag handler script loaded');
   </script>
 </head>
 <body>
-  <!-- Empty body as we're just using the script -->
+  <div style="position: fixed; top: 0; left: 0; padding: 10px; background: black; color: white; z-index: 9999;">
+    Script loaded
+  </div>
 </body>
 </html>

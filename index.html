@@ -3,8 +3,8 @@
 <head>
   <script>
     function handleTags() {
-      // Get all tag links
-      const tagLinks = document.querySelectorAll('.tag-links a[tag-text]');
+      // Updated selector to match your HTML structure
+      const tagLinks = document.querySelectorAll('a[rel="history"][tag-text]');
       
       // Get the current URL to check if a tag is active
       const currentUrl = window.location.href;
@@ -28,18 +28,21 @@
           if (thumbnailIndex) {
             setTimeout(() => {
               thumbnailIndex.scrollIntoView({ behavior: 'smooth' });
-            }, 300); // Small delay to let Cargo's filtering complete
+            }, 300);
           }
         });
       });
     }
 
-    // Run when DOM is loaded
+    // Try to run the function multiple times to ensure it catches the elements
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', handleTags);
     } else {
       handleTags();
     }
+    
+    // Additional safety net to ensure the script runs after Cargo loads
+    setTimeout(handleTags, 1000);
   </script>
 </head>
 <body>
